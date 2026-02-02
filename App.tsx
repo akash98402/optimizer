@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Task, TaskStatus, SortField, Page, User, AppSettings, TaskCategory } from './types';
 import { calculateStressAnalysis, getPriorityLevel, DEFAULT_SETTINGS, calculatePriorityScore } from './engine';
-import { getDailyStrategy } from './services/geminiService';
 import TaskForm from './components/TaskForm';
 import StressChart from './components/StressChart';
 import { exportTasksToPDF } from './services/pdfService';
@@ -38,7 +37,6 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | TaskStatus>('all');
   const [sortBy, setSortBy] = useState<SortField>('priority');
-  const [dailyStrategy, setDailyStrategy] = useState<string>('');
   
   // Auth Form State
   const [authEmail, setAuthEmail] = useState('');
@@ -50,12 +48,6 @@ const App: React.FC = () => {
     localStorage.setItem('academic_optimizer_settings', JSON.stringify(settings));
     localStorage.setItem('academic_user', JSON.stringify(user));
   }, [tasks, settings, user]);
-
-  useEffect(() => {
-    if (user.isLoggedIn && tasks.length > 0) {
-      getDailyStrategy(tasks, settings.maxStudyHoursPerDay).then(setDailyStrategy);
-    }
-  }, [tasks, user.isLoggedIn, settings.maxStudyHoursPerDay]);
 
   const handleLogout = () => {
     setUser({ email: '', isLoggedIn: false });
@@ -410,11 +402,13 @@ const App: React.FC = () => {
               </div>
 
               <div className="bg-gray-50 p-8 rounded-3xl border border-dashed border-gray-300">
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Strategic Advice from AI</h4>
-                <p className="text-sm italic text-gray-700 leading-loose font-medium">
-                  "{dailyStrategy || "Complete your profile by adding tasks to receive a tailored daily study strategy."}"
-                </p>
-              </div>
+                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">
+                  Planner Note
+              </h4>
+              <p className="text-sm text-gray-700 leading-loose font-medium">
+                 Complete tasks in priority order. If you finish early, start the next highest priority task.
+              </p>
+            </div>
             </div>
           </div>
         )}
