@@ -1,0 +1,5 @@
+{
+  "name": "Academic Workflow Optimizer",
+  "description": "An intelligent student task planner that automatically prioritizes academic tasks, predicts workload stress levels using sliding-window analysis, and provides AI-powered optimization insights using Gemini.",
+  "requestFramePermissions": []
+}
